@@ -10,8 +10,8 @@
     
     echo '
     <div class = "container">
-        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" >
-            <div class="carousel-inner" style = "height: 650px">           
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">           
     ';
       
     if($result)
@@ -21,7 +21,7 @@
 
         echo '
         <div class="carousel-item active" x>
-            <img src="data:image/jpeg;base64,'.base64_encode( $row[1] ).'" class="img-fluid" height = "100%" alt="...">
+            <img src="data:image/jpeg;base64,'.base64_encode( $row[1] ).'" class="responsive" alt="...">
         </div>
         ';
 
@@ -32,9 +32,7 @@
             echo 
             '
             <div class="carousel-item">
-            
-                <div class="numbertext"></div>
-                <img src="data:image/jpeg;base64,'.base64_encode( $row[1] ).'" class="d-block w-100" alt="...">
+                <img src="data:image/jpeg;base64,'.base64_encode( $row[1] ).'" class="responsive" alt="...">
             </div>
             ';
         }
