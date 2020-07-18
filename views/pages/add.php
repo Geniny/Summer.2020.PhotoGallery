@@ -12,7 +12,7 @@
 
     <body>
         <?php
-            require_once 'views/components/header.php';       
+            require 'views/components/header.php';       
         ?>
 
         <div class = "centered bordered-container vertical-centered">
@@ -20,20 +20,19 @@
                 <div class="form-group" >
                         <label for="image_name">Image name</label>
                         <input type="text" class="form-control" name="image_name" >
-                        <small id="passwordHelpInline" class="text-muted">
-                            Must be 8-20 characters long.
-                        </small>
                 </div>
                 <div class="form-group">
                     <label for="image_description">Short description</label>
-                    <input type="password" class="form-control" name="image_description">
+                    <input type="text" class="form-control" name="image_description">
                 </div>
-                <div class="form-group">
-                    <label for="image">Choose file...</label>      
-                    <input type='file' name='image' />  
-                </div>
-                </div class='text-center'>
-                    <input type="submit" class="btn btn-outline-secondary">Button</button>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name = "image" aria-describedby="inputGroupFileAddon04">
+                        <label class="custom-file-label" for="image">Choose file</label>
+                    </div>
+                    <div class="input-group-append">
+                        <button type = "submit" class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Button</button>
+                    </div>
                 </div>
             </form>
         </div>

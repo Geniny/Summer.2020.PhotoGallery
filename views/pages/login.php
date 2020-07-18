@@ -7,34 +7,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/site.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
 </head>
 
 <body>
     <?php
-        require_once 'views/components/header.php'; 
+    require 'views/components/header.php'; 
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") 
+    {
+        require_once 'php/config.php';
+
+        if(isset($_POST['login']) && isset($_POST['password']))
+        {  
+
+            $link = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+            
+            $login = htmlentities(mysqli_real_escape_string($link, $_POST['login']));
+            $password = htmlentities(mysqli_real_escape_string($link, $_POST['password']));
+
+            if ($link->connect_errno) {
+                printf("Соединение не удалось: %s\n", $link->connect_error);
+                exit();
+            }
+            
+            $query = "SELECT * FROM users WHERE login = '$login'";
+
+            if ($result = $link->query($query)) {
+                
+                $row = $result->fetch_assoc();
+                if(password_verify($password, $row['password']))
+                {
+                    if (!session_start())
+                    {
+                        echo "session error";
+                    }
+                    else
+                    {
+
+                        $_SESSION['user_id'] = $row['id'];
+                        $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
+                        echo session_status();
+                    }
+                    header("Location: http://".$_SERVER['HTTP_HOST']."/");
+                }
+                
+                $result->free();
+                
+            }
+            
+            $link->close();
+            exit;
+        }
+    } 
+
     ?>
 
     <div class="centered bordered-container vertical-centered">
-            <form method="post" action="php/login.php">
-                    <div class="form-group" >
-                            <label for="login">Email</label>
-                            <input type="text" class="form-control" name="login" >
-                    </div>
-                    <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" name="password">
-                    </div>
-                    <div class = "text-center">
-                        <button type="submit" class="btn btn-primary btn-block " style="margin-top: 5%;">Sign in</button>
-                    </div>
-            </form>
+        <form method="post" action="/login">
+            <div class="form-group" >
+                <label for="login">Email</label>
+                <input type="text" class="form-control" name="login" >
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password">
+            </div>
+            <div class = "text-center">
+                <button type="submit" class="btn btn-primary btn-block " style="margin-top: 5%;">Sign in</button>
+            </div>
+        </form>
     </div>
     
-        <div class='centered bordered-container text-center'>
-                <a href="/register">Create an account</a>
-        </div>
+    <div class='centered bordered-container text-center'>
+        <a href="/register">Create an account</a>
+    </div>
 
     <footer>
     </footer>
