@@ -83,7 +83,7 @@
     ?>
 
     <div class="centered bordered-container vertical-centered">
-        <form method="post" action="/register">
+        <form method="post" action="/signup">
             <div class="form-group" >
                 <label for="email">Email</label>
                 <input id = "email_field" type="text" class="form-control" name="email" value = "<?php echo $email;?>" > 
@@ -97,7 +97,7 @@
                 <input id = "repeat_password_field" type="password" class="form-control" name="repeat_password" value = "<?php echo $repeated_password;?>" >
             </div>
             <div class = "text-center">
-                <button type="submit" class="btn btn-primary btn-block" id="signin_btn" style="margin-top: 5%;">Sign in</button>
+                <button type="submit" class="btn btn-primary btn-block" id="signin_btn" style="margin-top: 5%;">Sign up</button>
             </div>
         </form>
     </div>

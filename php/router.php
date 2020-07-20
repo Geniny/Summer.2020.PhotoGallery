@@ -2,13 +2,13 @@
 
     $routes = array(
         '/'=>'views/pages/home.php',
-        '/login' => 'views/pages/login.php',
-        '/register' => 'views/pages/register.php'
+        '/signin' => 'views/pages/login.php',
+        '/signup' => 'views/pages/register.php'
     );
 
     $authorized_routes = array(
         '/add' => 'views/pages/add.php',
-        '/logout' => 'php/exit.php'
+        '/signout' => 'php/exit.php'
     );
 
     session_start();
@@ -28,7 +28,7 @@
             }
             else
             {               
-                header("Location: http://".$_SERVER['HTTP_HOST']."/login");
+                header("Location: http://".$_SERVER['HTTP_HOST']."/signin");
             }
         }
         else if(array_key_exists($uri, $routes))
