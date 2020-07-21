@@ -1,7 +1,11 @@
 # Summer.2020.PhotoGallery
 
-HomePage example
+##HomePage example
 
-![alt text](screens/home.png "Home")​
-![alt text](screens/add.png "Add")​
-![alt text](screens/signin.png "SignIn")​
+![alt text](img/home.png "Home")​
+
+##Add page
+![alt text](img/add.png "Add")​
+
+##Sign In page
+![alt text](img/signin.png "SignIn")​
