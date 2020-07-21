@@ -13,4 +13,19 @@ function password_validation($password)
 		return true;
 }
 
+function repeatedPassword_validation($password, $repeatedPassword)
+{
+	return $password == $repeatedPassword;
+}
+
+function image_name_validation($name)
+{
+	return strlen($name) <= 3 ? false : true;
+}
+
+function image_description_validation($description)
+{
+	return strlen($description) <= 8 ? false : true;
+}
+
 ?>

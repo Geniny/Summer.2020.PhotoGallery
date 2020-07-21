@@ -26,32 +26,32 @@ if($result)
         if ($counter == 1)
         {
          echo '<div class = "row row-cols-3" style = "margin-top: 30px;">';
-     }
+        }
 
-     echo 
-     '
-     <div class="col">
-     <img id = "img-'.$row[0].'" src="data:image/jpeg;base64,'.base64_encode( $row[1] ).'" style = "width: 100%; max-height: 300px; height: 300px;" alt="'.$row[5].'">
-     </div>
-     <script type="text/javascript">
-     img = document.getElementById("img-'.$row[0].'");
-     img.onclick = function(){
-        modal.style.display = "block";
-        console.log(this.alt);
-        modalContent.src = this.src;
-        captionText.innerHTML = this.alt;
-    }; 
-    </script>
-    ';
+         echo 
+         '
+         <div class="col">
+         <img id = "img-'.$row[0].'" src="data:image/jpeg;base64,'.base64_encode( $row[1] ).'" style = "width: 100%; max-height: 300px; height: 300px;" alt="'.$row[5].'">
+         </div>
+         <script type="text/javascript">
+         img = document.getElementById("img-'.$row[0].'");
+         img.onclick = function(){
+            modal.style.display = "block";
+            console.log(this.alt);
+            modalContent.src = this.src;
+            captionText.innerHTML = this.alt;
+        }; 
+        </script>
+        ';
 
-    if ($counter == 3)
-    {
-        echo '</div>';
-        $counter = 0;
+        if ($counter == 3 || $i == $rows -1 )
+        {
+            echo '</div>';
+            $counter = 0;
+        }
+        $counter = $counter + 1;
+
     }
-    $counter = $counter + 1;
-
-}
 mysqli_free_result($result);
 }
 
@@ -69,7 +69,7 @@ echo
 <div id="caption"></div>
 </div>
 
-<script type="text/javascript">
+<script>
 
 var span = document.getElementsByClassName("myclose")[0];
 
@@ -83,7 +83,6 @@ var modalContent = document.getElementsByClassName("modal-content")[0];
 var captionText = document.getElementById("caption");
 
 </script>
-
 ';
 
 mysqli_close($link);

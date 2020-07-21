@@ -13,90 +13,127 @@
 
 <body>
     <?php
-    require 'views/components/header.php';
-    $login = $password = ""; 
+    $email = $password = "";
+    $emailInputCheck = $passwordInputCheck = true; 
+
+    $emailInputView = 
+    '
+    <div class="form-group" >
+    <label for="email">Email</label>
+    <input id = "email_field" type="text" class="form-control" name="email" value = "'.$email.'" > 
+    </div>
+    ';
+
+    $passwordInputView =
+    '
+    <div class="form-group">
+    <label for="password">Password</label>
+    <input id = "password_field" type="password" class="form-control" name="password" value = "'.$password.'" >
+    </div>
+    '; 
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") 
     {
         require_once 'php/config.php';
-        require_once 'views/components/modal_message.php';
 
-        if(isset($_POST['login']) && isset($_POST['password']))
-        {  
+        $link = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
-            $link = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-            
-            $login = htmlentities(mysqli_real_escape_string($link, $_POST['login']));
-            $password = htmlentities(mysqli_real_escape_string($link, $_POST['password']));
+        if ($link->connect_errno) {
+            printf("Соединение не удалось: %s\n", $link->connect_error);
+            exit();
+        }
 
-            if ($link->connect_errno) {
-                printf("Соединение не удалось: %s\n", $link->connect_error);
-                exit();
-            }
-            
-            $query = "SELECT * FROM users WHERE login = '$login'";
-            $result = $link->query($query);
-            $row = $result->fetch_assoc();
-            if (isset($row['login'])) 
+        $email = isset($_POST['email']) ? htmlentities(mysqli_real_escape_string($link, $_POST['email'])) : "";
+        $password = isset($_POST['password']) ? htmlentities(mysqli_real_escape_string($link, $_POST['password'])) : "";
+
+        $query = "SELECT * FROM users WHERE login = '$email'";
+        $result = $link->query($query);
+        $row = $result->fetch_assoc();
+        if (isset($row['login'])) 
+        {
+
+            if(password_verify($password, $row['password']))
             {
-                
-                if(password_verify($password, $row['password']))
+                if (!session_start())
                 {
-                    if (!session_start())
-                    {
-                        echo "session error";
-                    }
-                    else
-                    {
-
-                        $_SESSION['user_id'] = $row['id'];
-                        $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
-                        echo session_status();
-                    }
-                    header("Location: http://".$_SERVER['HTTP_HOST']."/");
+                    echo "session error";
                 }
                 else
                 {
-                    show_modal_message("Incorrect password!");
+
+                    $_SESSION['user_id'] = $row['id'];
+                    $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
+                    echo session_status();
                 }
-                
-                $result->free();
-                
+                header("Location: http://".$_SERVER['HTTP_HOST']."/");
             }
             else
             {
-                show_modal_message("Can't find user with this email!");
+                $emailInputView = 
+                '
+                <div class="form-group" >
+                <label for="email">Email</label>
+                <input id = "email_field" type="text" class="form-control is-valid" name="email" value = "'.$email.'" >
+                </div>
+                ';
+                $passwordInputView =
+                '
+                <div class="form-group">
+                <label for="password">Password</label>
+                <input id = "password_field" type="password" class="form-control is-invalid" name="password" value = "'.$password.'" >
+                <div class="invalid-feedback">
+                Wrong password
+                </div>
+                </div>
+                ';
             }
 
-            
-            $link->close();
-        }
-    } 
+            $result->free();
 
+        }
+        else
+        {
+            $emailInputView = 
+            '
+            <div class="form-group" >
+            <label for="email">Email</label>
+            <input id = "email_field" type="text" class="form-control is-invalid" name="email" value = "'.$email.'" >
+            <div class="invalid-feedback">
+            No such user
+            </div> 
+            </div>
+            ';
+            $passwordInputView =
+            '
+            <div class="form-group">
+            <label for="password">Password</label>
+            <input id = "password_field" type="password" class="form-control" name="password" value = "'.$password.'" >
+            </div>
+            ';
+        }
+
+
+        $link->close();
+        
+    }
+
+    echo 
+    '
+    <div class="centered bordered-container vertical-centered">
+    <form method="post" action="/signin">
+    '.$emailInputView.'
+    '.$passwordInputView.'          
+    <div class = "text-center">
+    <button type="submit" class="btn btn-primary btn-block" id="signin_btn" style="margin-top: 5%;">Sign in</button>
+    </div>
+    </form>
+    </div>
+    <div class="centered bordered-container text-center">
+    <a href="/signup">Create an account</a>
+    </div>   
+    '; 
     ?>
 
-    <div class="centered bordered-container vertical-centered">
-        <form method="post" action="/signin">
-            <div class="form-group" >
-                <label for="login">Email</label>
-                <input type="text" class="form-control" name="login" value = "<?php echo $login;?>">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" value = "<?php echo $password;?>">
-            </div>
-            <div class = "text-center">
-                <button type="submit" class="btn btn-primary btn-block " style="margin-top: 5%;">Sign in</button>
-            </div>
-        </form>
-    </div>
-    
-    <div class='centered bordered-container text-center'>
-        <a href="/signup">Create an account</a>
-    </div>
-
-    <footer>
-    </footer>
 </body>
 
 
